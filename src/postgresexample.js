@@ -35,8 +35,13 @@ async function main(){
         timestamps: false
     })
     await Herois.sync()
+    await Herois.create({
+        nome:'lanterna verde',
+        poder:'anel'
+    })
     const result = await Herois.findAll({
         raw:true
+       // ,atributes:{'nome'} //traz o atributo desejado
     })
     console.log(result)
 }
