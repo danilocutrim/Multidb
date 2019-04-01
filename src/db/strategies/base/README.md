@@ -1,0 +1,1 @@
+Essa pasta contém tudo que é reutilizável entre as estratégias
