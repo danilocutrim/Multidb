@@ -56,11 +56,11 @@ class ContextStrategy {
 }
 
 
-const contextMongo = new ContextStrategy(new MongoDB())
+// const contextMongo = new ContextStrategy(new MongoDB())
 
-contextMongo.create();
-const contextPostgres = new ContextStrategy(new Postgres())
+// contextMongo.create();
+// const contextPostgres = new ContextStrategy(new Postgres())
 
-contextPostgres.create();
+// contextPostgres.create();
 
-contextMongo.read();
+// contextMongo.read();
