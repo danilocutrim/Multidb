@@ -24,6 +24,10 @@ class Postgres extends Icrud {
         } = await this._herois.create(item)
         return dataValues
     }
+    async read(item ={}){
+        const result = this._herois.findAll({where:item, raw: true})
+        return result
+    }
     async defineModel(){
         this._herois = this._driver.define('herois',{
             id:{
