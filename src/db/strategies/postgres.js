@@ -6,7 +6,6 @@ class Postgres extends Icrud {
         super()
         this._driver = null
         this._herois = null
-        this._connect()
     }
     async isConnected(){
         try{
@@ -19,11 +18,14 @@ class Postgres extends Icrud {
 
         }
     }
-    create(item){
-        console.log('salvo em Postgres')
+    async create(item){
+        const {
+            dataValues
+        } = await this._herois.create(item)
+        return dataValues
     }
     async defineModel(){
-        this._herois = _driver.define('herois',{
+        this._herois = this._driver.define('herois',{
             id:{
                 type: Sequelize.INTEGER,
                 required:true,
@@ -43,9 +45,9 @@ class Postgres extends Icrud {
             feezeTableName: false,
             timestamps: false
         })
-        await Herois.sync()
+        await this._herois.sync()
     }
-    _connect(){
+    async connect(){
         this._driver = new Sequelize(
         'heroes',
         'danilocutrim',
@@ -55,8 +57,10 @@ class Postgres extends Icrud {
             dialect:'postgres',
             quoteIdenfiers: false,
             operatorsAlises: false,
-        }
-    )}
+            }
+        )
+       await this.defineModel()
+    }
 }
 
 module.exports = Postgres
