@@ -28,6 +28,12 @@ class Postgres extends Icrud {
         const result = this._herois.findAll({where:item, raw: true})
         return result
     }
+    async update(id, item){
+        const result = await this._herois.update(item,{where: {id}})
+        console.log('resulkt',id)
+        return result
+
+    }
     async defineModel(){
         this._herois = this._driver.define('herois',{
             id:{
