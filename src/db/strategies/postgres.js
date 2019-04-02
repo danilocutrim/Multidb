@@ -5,15 +5,15 @@ class Postgres extends Icrud {
     constructor(){
         super()
         this._driver = null
-        this._heroes = null
+        this._herois = null
         this._connect()
     }
     async isConnected(){
         try{
-            await this._driver.authenticated()
+            await this._driver.authenticate()
             return true
         }
-        catch(erro){
+        catch(error){
             console.log('fail',error)
             return false
 
@@ -23,7 +23,7 @@ class Postgres extends Icrud {
         console.log('salvo em Postgres')
     }
     async defineModel(){
-        this._herois = driver.define('herois',{
+        this._herois = _driver.define('herois',{
             id:{
                 type: Sequelize.INTEGER,
                 required:true,

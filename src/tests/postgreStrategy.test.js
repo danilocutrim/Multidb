@@ -4,10 +4,11 @@ const Context = require('../db/strategies//base/contextStrategy')
 
 const context = new Context(new Postgres())
 
+
 describe('Postgres Strategy', function(){
     this.timeout(Infinity)
     it('PostgresSQL connections', async function(){
-        const result = await  context.isConnected()
+        const result = await context.isConnected()
         assert.equal(result, true)
     })
 })

@@ -1,9 +1,12 @@
 const Icrud = require('../interfaces/interfaceCrud')
 class ContextStrategy extends Icrud {
     // falar no constructor qual a minha estratégia de banco de dados
-    constructor(strategy){
+    constructor(database){
         super()
-        this._database = strategy
+        this._database = database
+    }
+    isConnected(){
+        return this._database.isConnected()
     }
     create(item){
         return this._database.create(item)
