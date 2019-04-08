@@ -34,6 +34,10 @@ class Postgres extends Icrud {
         return result
 
     }
+    async delete(id){
+        const query = id ? { id } :{}
+        return this._herois.destroy({where: query})
+    }
     async defineModel(){
         this._herois = this._driver.define('herois',{
             id:{
