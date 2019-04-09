@@ -20,7 +20,7 @@ class ContextStrategy extends Icrud {
     delete(item){
         return this._database.delete(item)
     }
-    connect(){
+    static connect(){
         return this._database.connect()
     }
 }

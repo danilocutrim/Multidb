@@ -35,3 +35,7 @@ sudo docker run \
 sudo docker exec -it mongodb \
     mongo --host localhost -u admin -p senhaadmin --authenticationDatabase admin \
     --eval "db.getSiblingDB('herois').createUser({user: 'danilocutrim', pwd: '75475668', roles: [{role: 'readWrite', db: 'herois'}]})"
+
+
+
+para remover todos os containers ativos e inativos//docker rm $(docker ps -aq)
