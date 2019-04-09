@@ -5,6 +5,10 @@ const MOCK_HEROI_CADASTRAR = {
     nome: 'mulher maravilha',
     poder: 'laço'
 }
+const MOCK_HEROI_DEFAULT = {
+    nome: `homem aranha-${Date.now()}`,
+    poder: 'teia'
+}
 
 const context = new Context(new Mongodb())
 describe('Mongodb Suite de testes mongo', function (){
@@ -19,6 +23,14 @@ describe('Mongodb Suite de testes mongo', function (){
     })
     it('cadastrar mongo ', async () =>{
         const {nome, poder} = await context.create(MOCK_HEROI_CADASTRAR)
+        await context.create(MOCK_HEROI_DEFAULT)
         assert.deepEqual({nome, poder}, MOCK_HEROI_CADASTRAR)
+    })
+    it('listar herois mongo', async ()=>{
+        const [{nome,poder}] = await context.read({nome: MOCK_HEROI_DEFAULT.nome})
+        const result = {
+             nome,poder
+         }
+        assert.deepEqual(result,MOCK_HEROI_DEFAULT)
     })
 })
