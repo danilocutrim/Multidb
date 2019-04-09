@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha src/tests/*.js",
     "test": "mocha src/tests/*.js -w"
   },
   "author": "",
@@ -12,6 +11,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "mocha": "^6.0.2",
+    "mongoose": "^5.5.0",
     "pg": "^7.9.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^5.2.8"

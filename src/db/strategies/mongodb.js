@@ -53,14 +53,14 @@ class MongoDB extends Icrud{
     create(item){
         return this._herois.create(item)
     }
-    read(){
-
+    read(item, skip=0, limit=0){
+        return this._herois.find(item).skip(skip).limit(limit)
     }
     update(id, item){
-
+        return this._herois.updateOne({_id: id}, {$set: item})
     }
-    delete(){
-
+    delete(id){
+        return this.herois.deleteOne({_id: id})
     }
 }
 
