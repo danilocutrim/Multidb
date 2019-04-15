@@ -1,4 +1,5 @@
 const BaseRoute = require('./base/baseRoute')
+const Joi = require('joi')
 class HeroRoutes extends BaseRoute {
     constructor(db) {
         super()
@@ -9,6 +10,18 @@ class HeroRoutes extends BaseRoute {
         return {
             path: '/heroi',
             method: 'GET',
+            config:{
+                validate:{
+                    failAction: (request, headers, erro)=>{
+                        throw erro
+                    },
+                    query:{
+                        skip: Joi.number().integer().default(0),
+                        limit: Joi.number().integer().default(10),
+                        nome: Joi.string().min(3).max(100)
+                    }
+                }
+            },
             handler: (request, headers) => {
                 try{
                     const {
@@ -16,18 +29,10 @@ class HeroRoutes extends BaseRoute {
                         limit,
                         nome
                     } = request.query
-                    let query = {}
-                    if(nome){
-                        query.nome = nome
-                    }
-                    if(isNaN(skip)){
-                        throw Error('o tipo do skip é incorreto')
-                    }
-                    if(isNaN(limit)){
-                        throw Error('o tipo de limit é incorreto')
-                    }
-
-                return this.db.read(query, parseInt(skip), parseInt(limit))
+                    const query = nome ? {
+                        nome: {$regex: `.*${nome}*.`} // lista todo mundo que possui esse nome com um operador especial do mongo db
+                    } : {}
+                return this.db.read(nome ? query : {}, parseInt(skip), parseInt(limit))
                 } catch(error) {
                     console.log('Deu ruimm',error)
                     return "erro interno no servidor"
