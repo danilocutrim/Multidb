@@ -5,10 +5,21 @@ const MOCK_HEROI_CADASTRAR = {
     nome:'chapolin colorado',
     poder:'marreta bionica'
 }
-
-describe('suite de teste da api heroes ', function(){
+const MOCK_HEROI_INICIAL = {
+    nome: 'gavião negro',
+    poder: 'flechas'
+}
+let MOCK_ID = ''
+describe.only('suite de teste da api heroes ', function(){
     this.beforeAll(async()=>{
         app = await api
+        const result = await app.inject({
+            method: 'POST',
+            url:'/heroi',
+            payload: JSON.stringify(MOCK_HEROI_INICIAL)
+        })
+        const dados = JSON.parse(result.payload)
+        MOCK_ID = dados._id
     })
     it('listar /herois', async () => {
         result = await app.inject({
@@ -68,4 +79,37 @@ describe('suite de teste da api heroes ', function(){
         assert.notStrictEqual(_id, undefined)
         assert.deepEqual(message,"heroi cadastrado com sucesso")
     })
+    it('atualiza heroi/:_id ', async()=>{
+        const _id = MOCK_ID
+        const expected = {
+            poder: 'flechas'
+        }
+        const result = await app.inject({
+            method: 'PATCH',
+            url:`/heroi/${_id}`,
+            payload: JSON.stringify(expected)
+        })
+        const statusCode = result.statusCode
+        const dados = JSON.parse(result.payload)
+        console.log(_id)
+        console.log(statusCode)
+        assert.ok(statusCode === 200)
+        assert.deepEqual(dados.message, "heroi atualizado com sucesso")
+    })
+    //     it('não deve atualizar com id incorreto/:_id ', async()=>{
+    //     const _id = '5caf42a90716001f6567e4e6'
+    //     const expected = {
+    //         poder: 'flechas'
+    //     }
+    //     const result = await app.inject({
+    //         method: 'PATCH',
+    //         url:`/heroi/${_id}`,
+    //         payload: JSON.stringify(expected)
+    //     })
+    //     const statusCode = result.statusCode
+    //     const dados = JSON.parse(result.payload)
+    //     console.log(statusCode)
+    //     assert.ok(statusCode === 200)
+    //     assert.deepEqual(dados.message, "Não foi possivel atualizar")
+    // })
 })
