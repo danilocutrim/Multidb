@@ -81,13 +81,13 @@ describe.only('suite de teste da api heroes ', function(){
     })
     it('atualiza heroi/:_id ', async()=>{
         const _id = MOCK_ID
-        const expected = {
-            poder: 'coloca ovos'
-        }
+
         const result = await app.inject({
             method: 'PATCH',
             url:`/heroi/${_id}`,
-            payload: JSON.stringify(expected)
+            payload: JSON.stringify({
+            poder: 'coloca ovos'
+        })
         })
         const statusCode = result.statusCode
         const dados = JSON.parse(result.payload)
@@ -96,19 +96,59 @@ describe.only('suite de teste da api heroes ', function(){
     })
         it('não deve atualizar com id incorreto/:_id ', async()=>{
         const _id = '5caf42a90716001f6567e4e6'
-        const expected = {
-            poder: 'flechas'
-        }
+        const expected = { statusCode: 428,
+          error: 'Precondition Required',
+          message: 'Não encontrado no banco'}
         const result = await app.inject({
             method: 'PATCH',
             url:`/heroi/${_id}`,
-            payload: JSON.stringify(expected)
+            payload: JSON.stringify({
+            poder: 'coloca ovos'
+        })
         })
         const statusCode = result.statusCode
         const dados = JSON.parse(result.payload)
         console.log(statusCode)
-        assert.ok(statusCode === 200)
-        assert.deepEqual(dados.message, "Não foi possivel atualizar")
+        assert.ok(statusCode === 428)
+        assert.deepEqual(dados, expected)
     })
+    it('remover Delete - heroi/id',async ()=>{
+    const _id = MOCK_ID
+    const result = await app.inject({
+        method: 'DELETE',
+        url:`/heroi/${_id}`
+    })
+    const statusCode = result.statusCode
+    const dados = JSON.parse(result.payload)
 
+    assert.ok(statusCode === 200)
+    assert.deepEqual(dados.message, 'heroi removido com sucesso')
+    })
+    it('não deve remover Delete - heroi/id',async ()=>{
+    const _id = '5caf42a90716001f6567e4e6'
+    const result = await app.inject({
+        method: 'DELETE',
+        url:`/heroi/${_id}`
+    })
+    const statusCode = result.statusCode
+    const dados = JSON.parse(result.payload)
+    assert.ok(statusCode === 412)
+    assert.deepEqual(dados, { statusCode: 412,
+      error: 'Precondition Failed',
+      message: 'não foi possivel' })
+    })
+        it('não deve remover Delete - heroi/id',async ()=>{
+    const _id = 'algum_id'
+    const result = await app.inject({
+        method: 'DELETE',
+        url:`/heroi/${_id}`
+    })
+    const statusCode = result.statusCode
+    const dados = JSON.parse(result.payload)
+    console.log(dados)
+    assert.ok(statusCode === 500)
+    assert.deepEqual(dados, { statusCode: 500,
+  error: 'Internal Server Error',
+  message: 'An internal server error occurred' })
+    })
 })
