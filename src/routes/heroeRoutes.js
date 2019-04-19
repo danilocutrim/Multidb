@@ -74,7 +74,7 @@ class HeroRoutes extends BaseRoute {
     }
     update(){
         return{
-            path: '/heroi/${id}',
+            path: '/heroi/{id}',
             method:'PATCH',
             config:{
                 validate:{
@@ -83,7 +83,7 @@ class HeroRoutes extends BaseRoute {
                     },
                     payload:{
                         nome: Joi.string().min(3).max(100),
-                        pode: Joi.string().min(2).max(100)
+                        poder: Joi.string().min(2).max(100)
                     }
                 }
             },

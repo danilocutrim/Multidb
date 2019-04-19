@@ -25,12 +25,7 @@ sudo docker run \
     -d \
     mongo:4
 
-sudo docker run \
-    --name mongoclient \
-    -p 3000:3000 \
-    --link mongodb:mongodb \
-    -d \
-    mongoclient/mongoclient
+sud
 
 sudo docker exec -it mongodb \
     mongo --host localhost -u admin -p senhaadmin --authenticationDatabase admin \

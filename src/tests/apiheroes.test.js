@@ -33,7 +33,7 @@ describe.only('suite de teste da api heroes ', function(){
     })
     it('listar /heroi deve filtrar um item ' ,async ()=>{
         const TAMANHO_LIMITE = 1000
-        const NAME = 'homem aranha-1554987542949'
+        const NAME = 'gavião negro'
         const result = await app.inject({
             method:'GET',
             url:`/heroi?skip=0&limit=${TAMANHO_LIMITE}&nome=${NAME}`
@@ -82,6 +82,21 @@ describe.only('suite de teste da api heroes ', function(){
     it('atualiza heroi/:_id ', async()=>{
         const _id = MOCK_ID
         const expected = {
+            poder: 'coloca ovos'
+        }
+        const result = await app.inject({
+            method: 'PATCH',
+            url:`/heroi/${_id}`,
+            payload: JSON.stringify(expected)
+        })
+        const statusCode = result.statusCode
+        const dados = JSON.parse(result.payload)
+        assert.ok(statusCode === 200)
+        assert.deepEqual(dados.message, "heroi atualizado com sucesso")
+    })
+        it('não deve atualizar com id incorreto/:_id ', async()=>{
+        const _id = '5caf42a90716001f6567e4e6'
+        const expected = {
             poder: 'flechas'
         }
         const result = await app.inject({
@@ -91,25 +106,9 @@ describe.only('suite de teste da api heroes ', function(){
         })
         const statusCode = result.statusCode
         const dados = JSON.parse(result.payload)
-        console.log(_id)
         console.log(statusCode)
         assert.ok(statusCode === 200)
-        assert.deepEqual(dados.message, "heroi atualizado com sucesso")
+        assert.deepEqual(dados.message, "Não foi possivel atualizar")
     })
-    //     it('não deve atualizar com id incorreto/:_id ', async()=>{
-    //     const _id = '5caf42a90716001f6567e4e6'
-    //     const expected = {
-    //         poder: 'flechas'
-    //     }
-    //     const result = await app.inject({
-    //         method: 'PATCH',
-    //         url:`/heroi/${_id}`,
-    //         payload: JSON.stringify(expected)
-    //     })
-    //     const statusCode = result.statusCode
-    //     const dados = JSON.parse(result.payload)
-    //     console.log(statusCode)
-    //     assert.ok(statusCode === 200)
-    //     assert.deepEqual(dados.message, "Não foi possivel atualizar")
-    // })
+
 })
