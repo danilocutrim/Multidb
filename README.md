@@ -34,3 +34,7 @@ sudo docker exec -it mongodb \
 
 
 para remover todos os containers ativos e inativos//docker rm $(docker ps -aq)
+sudo npm install -g cross-env
+cross-env NODE_ENV=prod npm t // para rodar em ambiente de produção
+cross-env NODE_ENV=dev npm t // para rodar em ambiente de desenvolvimento
+
