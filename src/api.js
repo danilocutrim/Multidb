@@ -10,9 +10,11 @@ const HapiSwagger = require('hapi-swagger')
 const Vision = require('vision')
 const Inert = require('inert')
 const HapiJwt = require('hapi-auth-jwt2')
+const Postgres = require('./db/strategies/postgres/postgres')
+const UserSchemma = require('./db/strategies/postgres/scheemas/userSchema')
 const JWT_SECRET = 'segredo123'
 const app = new Hapi.server({
-    port:5000
+    port:4000
 })
 function mapRoutes (instance, methods) {
     return methods.map(method => instance[method]())
@@ -21,6 +23,9 @@ function mapRoutes (instance, methods) {
 async function main(){
     const connection = MongoDB.connect()
     const context = new Context(new MongoDB(connection, HeroiSchema))
+    const connectionPostgres = await Postgres.connect()
+    const userSchema = await Postgres.defineModel(connectionPostgres, UserSchemma)
+    const contextPostgres = new Context(new Postgres(connectionPostgres, userSchema))
     const swaggerOptions = {
         info:{
             title:'API herois',
@@ -42,7 +47,16 @@ async function main(){
         // options:{
         //     expiresIn:20
         // }
-        validate:(dado, request)=>{
+        validate:async (dado, request)=>{
+            const result = await contextPostgres.read({
+                username: dado.username.toLowerCase(),
+                id: dado.id
+            })
+            if(!result){
+                return{
+                    isValid:false
+                }
+            }
             //verifica no banco se user continua ativo
             // verifica no banco se user continua pagando
             return{
@@ -53,7 +67,7 @@ async function main(){
     app.auth.default('jwt')
     app.route([
         ...mapRoutes(new HeroeRoute(context), HeroeRoute.methods()),
-        ...mapRoutes(new AuthRoutes(JWT_SECRET),AuthRoutes.methods())
+        ...mapRoutes(new AuthRoutes(JWT_SECRET, contextPostgres),AuthRoutes.methods())
     ])
     await app.start()
     console.log('rodando na porta 5000')
