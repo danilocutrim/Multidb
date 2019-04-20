@@ -16,7 +16,7 @@ class MongoDB extends Icrud{
         const state = STATUS[this._connection.readyState]
         if(state === 'conectado') return true;
         if(state !== 'conectando') return state
-         await new Promise (resolve => setTimeout(resolve, 1200))
+         await new Promise (resolve => setTimeout(resolve, 1000))
 
         return STATUS[this._connection.readyState]
     }
