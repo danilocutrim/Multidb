@@ -1,12 +1,16 @@
 // sudo npm install vision inert -hapi-swagger
+// npm install hapi-auth-jwt2
 const Hapi = require('hapi')
 const MongoDB = require('./db/strategies/mongodb/mongodb')
 const HeroiSchema =  require('./db/strategies/mongodb/scheemas/heroischeema')
 const Context = require('./db/strategies/base/contextStrategy')
 const HeroeRoute = require('./routes/heroeRoutes')
+const AuthRoutes = require('./routes/authRoutes')
 const HapiSwagger = require('hapi-swagger')
 const Vision = require('vision')
 const Inert = require('inert')
+const HapiJwt = require('hapi-auth-jwt2')
+const JWT_SECRET = 'segredo123'
 const app = new Hapi.server({
     port:5000
 })
@@ -25,6 +29,7 @@ async function main(){
         lang: 'pt'
     }
     await app.register([
+        HapiJwt,
         Vision,
         Inert,
         {
@@ -32,9 +37,24 @@ async function main(){
           options:swaggerOptions
         }
     ])
-    app.route(
-        mapRoutes(new HeroeRoute(context), HeroeRoute.methods())
-    )
+    app.auth.strategy('jwt','jwt',{
+        key: JWT_SECRET,
+        // options:{
+        //     expiresIn:20
+        // }
+        validate:(dado, request)=>{
+            //verifica no banco se user continua ativo
+            // verifica no banco se user continua pagando
+            return{
+                isValid: true
+            }
+        }
+    })
+    app.auth.default('jwt')
+    app.route([
+        ...mapRoutes(new HeroeRoute(context), HeroeRoute.methods()),
+        ...mapRoutes(new AuthRoutes(JWT_SECRET),AuthRoutes.methods())
+    ])
     await app.start()
     console.log('rodando na porta 5000')
     return app
