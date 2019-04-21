@@ -6,11 +6,11 @@ const UserSchema = require('./../db/strategies/postgres/scheemas/userSchema')
 let app = {}
 const USER = {
     username:'xuxadasilva',
-    password:'123'
+    password:'danilocutrim@123'
     }
 const USER_DB = {
     username:USER.username.toLowerCase(),
-    password:'$2b$04$aRYJY1c36d2BY0Ysluuq0.0qrWU8PgHCaFMZfJNSsPWrRYI/ryLTi'
+    password:'$2a$10$kuxByzaU0jH92F2EN.MbHO3kzhPus.iSr0DtbOuVWlcfD44R1vQBG'
 }
 
 describe('auth test suite ', function(){
